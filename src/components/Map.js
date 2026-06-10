@@ -1,30 +1,38 @@
+import { useRef, useEffect, useState } from 'react'; 
 
-import { useRef, useEffect } from 'react';
+const clans = {
+  BDE: '#3B82F6',
+  BDA: '#F59E0B',
+  BDS: '#10B981',
+  neutral: '#1F2937'
+};
 
 function Map() {
+  const canvasRef = useRef(null);
 
-    // Ref to access the canvas DOM element directly, its a pointer
-    const canvasRef = useRef(null);
+  // draws ONE cell directly on canvas
+  const updateCell = (x, y, clan) => {
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.fillStyle = clans[clan];
+    ctx.fillRect(x * 4, y * 4, 4, 4);
+  };
 
-    // Runs once after the component mounts to draw initial canvas content
-    useEffect(()    =>{
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d'); // 2D rendering context
+  // draws ALL cells once on mount
+  useEffect(() => {
+    for (let y = 0; y < 200; y++) {
+      for (let x = 0; x < 200; x++) {
+        updateCell(x, y, 'neutral');
+      }
+    }
 
-        // Draw a red 50x50 square at the top-left corner
-        ctx.fillStyle = 'red';
-        ctx.fillRect(0, 0, 50, 50);
-    }, []);
-
+      updateCell(100, 100, 'BDE'); // test
+  }, []);
 
   return (
-      <div>
-          <h1>
-            Map
-          </h1>
-          {/* 800x800 canvas where the map is drawn */}
-          <canvas ref= { canvasRef}  width={800} height={800}></canvas>
-      </div>
+    <div>
+      <h2>Map</h2>
+      <canvas ref={canvasRef} width={800} height={800}></canvas>
+    </div>
   );
 }
 
