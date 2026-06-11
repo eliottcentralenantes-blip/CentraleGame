@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/eliottb/Documents/GAME1/centrale_game/backend/venv
+set -gx VIRTUAL_ENV /home/eliott/Documents/admin/CentraleGame/backend/venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

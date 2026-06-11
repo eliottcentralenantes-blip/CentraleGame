@@ -1,4 +1,4 @@
-#!/home/eliottb/Documents/GAME1/centrale_game/backend/venv/bin/python3
+#!/home/eliott/Documents/admin/CentraleGame/backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

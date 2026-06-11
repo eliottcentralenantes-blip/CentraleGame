@@ -7,6 +7,8 @@ const clans = {
   neutral: '#1F2937'
 };
 
+
+
 function Map() {
   const canvasRef = useRef(null);
 
@@ -25,7 +27,6 @@ function Map() {
       }
     }
 
-      updateCell(100, 100, 'BDE'); // test
   }, []);
 
   return (

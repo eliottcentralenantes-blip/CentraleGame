@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react';
 
-
-
-// This component displays the dashboard with clan statistics
-
-
-
 function Dashboard() {
-  const [clanStats, setClanStats] = useState([]); // start empty 
+  const [clanStats, setClanStats] = useState([]); // start empty
+
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/leaderboard')   // send request
-      .then(response => response.json())          // when response arrives, parse JSON
-      .then(data => setClanStats(data));          // when JSON is ready, store it
+    fetch('http://127.0.0.1:8000/leaderboard')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setClanStats(data);
+      });
   }, []);
 
   return (
-   <div>
+    <div>
       <h2>Dashboard</h2>
       {clanStats
         .sort((a, b) => b.pixels - a.pixels)
