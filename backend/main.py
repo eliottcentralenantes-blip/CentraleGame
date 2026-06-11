@@ -1,9 +1,12 @@
+import os
+from dotenv import load_dotenv
+
 from fastapi import FastAPI
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
 
-
+load_dotenv() #reads the .env file
     
 app = FastAPI()
 
@@ -37,5 +40,5 @@ def get_db_connection():
         port=5432,
         dbname="centrale",
         user="postgres",
-        password="mypassword"
+        password=os.getenv("DB_PASSWORD")  # read from environment, not hardcoded
     )
