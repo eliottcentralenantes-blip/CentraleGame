@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 import psycopg2
+from psycopg2.extras import RealDictCursor
+
 
 
     
@@ -18,15 +20,17 @@ app.add_middleware(
 def root():
     return {"message": "Centrale Game API is alive"}
 
-@app.get("/leaderboard")
-def leaderboard() :
-    return [
-        {"name": "BDE", "color": "#3B82F6", "pixels": 1200},
-        {"name": "BDA", "color": "#F59E0B", "pixels": 850},
-        {"name": "BDS", "color": "#10B981", "pixels": 650},
-    ]
 
-/* open a connection to the database and return it */
+@app.get("/leaderboard")
+def dashboard():
+    conn = get_db_connection()        # 1. open connection
+    cur = conn.cursor(cursor_factory=RealDictCursor)  # 2. create cursor
+    cur.execute("SELECT name, color, pixels FROM clans")  # 3. run query
+    rows = cur.fetchall()             # 4. get all results
+    conn.close()                      # 5. close connection
+    return rows                       # 6. send back
+
+# Helper function to connect to the database    
 def get_db_connection():
     return psycopg2.connect(
         host="localhost",

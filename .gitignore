@@ -1,23 +1,17 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Dependencies (reinstallable)
+node_modules/
+backend/venv/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# Python cache
+__pycache__/
+*.pyc
 
-# testing
-/coverage
+# Secrets
+.env
 
-# production
-/build
+# Build output
+build/
+dist/
 
-# misc
+# OS files
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
