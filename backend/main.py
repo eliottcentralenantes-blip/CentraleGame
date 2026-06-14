@@ -1,16 +1,11 @@
-import os
-from dotenv import load_dotenv
-
 from fastapi import FastAPI
-import psycopg2
 from psycopg2.extras import RealDictCursor
+from fastapi.middleware.cors import CORSMiddleware
 
+from database import get_db_connection
 
-load_dotenv() #reads the .env file
     
 app = FastAPI()
-
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,26 +14,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/")
 def root():
+    # Health check endpoint — confirms the API is running
     return {"message": "Centrale Game API is alive"}
 
 
 @app.get("/leaderboard")
 def dashboard():
-    conn = get_db_connection()        # 1. open connection
-    cur = conn.cursor(cursor_factory=RealDictCursor)  # 2. create cursor
-    cur.execute("SELECT name, color, pixels FROM clans")  # 3. run query
-    rows = cur.fetchall()             # 4. get all results
-    conn.close()                      # 5. close connection
-    return rows                       # 6. send back
+    # Returns all clans with their name, color, and pixel count for the leaderboard
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)  # RealDictCursor returns rows as dicts instead of tuples
+    cur.execute("SELECT name, color, pixels FROM clans")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
 
-# Helper function to connect to the database    
-def get_db_connection():
-    return psycopg2.connect(
-        host="localhost",
-        port=5432,
-        dbname="centrale",
-        user="postgres",
-        password=os.getenv("DB_PASSWORD")  # read from environment, not hardcoded
-    )
+
+
+@app.get("/territory")
+def get_territory():     # ← unique, descriptive name
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SELECT x, y, color FROM territory")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
