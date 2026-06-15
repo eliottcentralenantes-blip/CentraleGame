@@ -10,7 +10,9 @@ const clans = {
 
 
 function Map() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef(null); //create a pointer to the canva
+
+  const [cells, setCells] = useState([]); // state variable thqt will contain all the cells
 
   // draws ONE cell directly on canvas
   const updateCell = (x, y, clan) => {
@@ -19,15 +21,22 @@ function Map() {
     ctx.fillRect(x * 4, y * 4, 4, 4);
   };
 
-  // draws ALL cells once on mount
+  /*once a request to territory, edit cells with a new data*/
   useEffect(() => {
-    for (let y = 0; y < 200; y++) {
-      for (let x = 0; x < 200; x++) {
-        updateCell(x, y, 'neutral');
-      }
-    }
+  fetch('http://127.0.0.1:8000/territory')
+    .then(response => response.json())
+    .then(data => setCells(data));
+}, []);
 
-  }, []);
+  /* color from the database each cells of the canvas*/
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext('2d');
+    cells.forEach(cell => {
+      ctx.fillStyle = cell.color;              // color from the database
+      ctx.fillRect(cell.x * 4, cell.y * 4, 4, 4);  // position from the database
+    });
+  }, [cells]);   // re-runs when cells arrive
+
 
   return (
     <div>
