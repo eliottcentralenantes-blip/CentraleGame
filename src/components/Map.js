@@ -15,9 +15,9 @@ function Map() {
   const [cells, setCells] = useState([]); // state variable thqt will contain all the cells
 
   // draws ONE cell directly on canvas
-  const updateCell = (x, y, clan) => {
+  const updateCell = (x, y, color) => {
     const ctx = canvasRef.current.getContext('2d');
-    ctx.fillStyle = clans[clan];
+    ctx.fillStyle = color;
     ctx.fillRect(x * 4, y * 4, 4, 4);
   };
 
@@ -36,6 +36,20 @@ function Map() {
       ctx.fillRect(cell.x * 4, cell.y * 4, 4, 4);  // position from the database
     });
   }, [cells]);   // re-runs when cells arrive
+
+
+    useEffect(() => {
+      const ws = new WebSocket("ws://localhost:8000/ws");
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+              updateCell(data.x, data.y, data.color);
+      };
+      return () => {
+        ws.close();
+      };
+    }, []);
+
+
 
 
   return (

@@ -1,8 +1,9 @@
-from fastapi import FastAPI
-from psycopg2.extras import RealDictCursor
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-
+from psycopg2.extras import RealDictCursor
 from database import get_db_connection
+
+from connection_manager import manager
 
     
 app = FastAPI()
@@ -41,3 +42,19 @@ def get_territory():     # ← unique, descriptive name
     rows = cur.fetchall()
     conn.close()
     return rows
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    # 1. connect
+    # 2. keep listening for messages in a loop
+    # 3. on disconnect, clean up
+    await manager.connect(websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            # Broadcast the received message to all connected clients
+            await manager.broadcast(data)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+
