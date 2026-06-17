@@ -38,7 +38,7 @@ def dashboard():
 def get_territory():     # ← unique, descriptive name
     conn = get_db_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT x, y, color FROM territory")
+    cur.execute("SELECT x, y, color, ground FROM territory")
     rows = cur.fetchall()
     conn.close()
     return rows

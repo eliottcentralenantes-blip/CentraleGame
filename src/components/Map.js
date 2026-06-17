@@ -4,8 +4,19 @@ const clans = {
   BDE: '#3B82F6',
   BDA: '#F59E0B',
   BDS: '#10B981',
-  neutral: '#1F2937'
+  neutral: '#4F2937'
 };
+
+const TERRAIN_COLORS = {
+  outside:      '#F5F5F5',
+  building:     '#102648',
+  construction: '#E26469',
+  path:         '#D1D1D1',
+  sports:       '#258801',
+  rez:          '#005BF6',
+};
+
+const NON_CAPTURABLE = new Set(['outside', 'building', 'construction']);
 
 
 
@@ -32,10 +43,13 @@ function Map() {
   useEffect(() => {
     const ctx = canvasRef.current.getContext('2d');
     cells.forEach(cell => {
-      ctx.fillStyle = cell.color;              // color from the database
-      ctx.fillRect(cell.x * 4, cell.y * 4, 4, 4);  // position from the database
+      const terrainColor = TERRAIN_COLORS[cell.ground] ?? '#888888';
+      const isNeutral = cell.color === clans.neutral;
+      const color = (NON_CAPTURABLE.has(cell.ground) || isNeutral) ? terrainColor : cell.color;
+      ctx.fillStyle = color;
+      ctx.fillRect(cell.x * 4, cell.y * 4, 4, 4);
     });
-  }, [cells]);   // re-runs when cells arrive
+  }, [cells]);
 
 
     useEffect(() => {
